@@ -1461,6 +1461,22 @@ footer{background:transparent}
 }
 @keyframes carreFond{0%{opacity:1}100%{opacity:0}}
 
+/* ── 23. REVOIR L'ANIMATION ───────────────────────────────────
+   Le dévoilement est sauté quand la page est rechargée en cours de lecture :
+   ce bouton le rejoue à la demande. Discret, mais toujours atteignable. */
+#rejoue{display:inline-flex;align-items:center;gap:8px;cursor:pointer;
+  padding:11px 16px;border-radius:100px;font:inherit;font-size:.84rem;font-weight:600;
+  color:rgba(var(--ice-rgb),.72);background:rgba(var(--ice-rgb),.05);
+  border:1px solid var(--line);transition:color .35s var(--e),background .35s var(--e),
+  border-color .35s var(--e),transform .35s var(--e)}
+#rejoue i{font-style:normal;font-size:1rem;line-height:1;color:var(--gold-l);
+  transition:transform .5s var(--e)}
+#rejoue:hover{color:var(--ice);background:rgba(var(--ice-rgb),.09);
+  border-color:rgba(var(--gold-rgb),.34);transform:translateY(-2px)}
+#rejoue:hover i{transform:rotate(-180deg)}
+#rejoue:focus-visible{outline:2px solid var(--gold-l);outline-offset:3px}
+@media(max-width:520px){#rejoue span{display:none}#rejoue{padding:11px 14px}}
+
 /* ── 8. MOUVEMENT RÉDUIT — la version statique reste complète ── */
 @media (prefers-reduced-motion:reduce){
   .uw path{stroke-dashoffset:0;animation:none}
@@ -1531,6 +1547,8 @@ footer{background:transparent}
       <div class="hero-acts">
         <a href="#budget" class="btn" data-h>Commencer mon parcours <i>→</i></a>
         <a href="#bibliotheque" class="btn gh" data-h>Explorer les ressources</a>
+        <button id="rejoue" type="button" title="Revoir l'animation d'ouverture" data-h>
+          <i aria-hidden="true">↺</i><span>Revoir l'animation</span></button>
       </div>
 
       <div class="sign">
@@ -4031,7 +4049,7 @@ const PARCOURS=(function(){
 
   /* La mosaïque de secours : mêmes carrés, même explosion, en CSS. Elle est
      posée tout de suite pour couvrir le hero, puis lancée comme l'autre. */
-  function rideauCss(doux){
+  function rideauCss(doux,direct){
     if($('#rideauCss'))return;
     const petit=innerWidth<760;
     const gx=petit?8:16, gy=petit?14:9;
@@ -4060,16 +4078,24 @@ const PARCOURS=(function(){
     /* on retire quand le dernier carré est parti, pas avant */
     const total=(doux?0.9+0.75:1.5+1.25+0.1)*1000+400;
     const part=()=>setTimeout(()=>d.remove(),total);
+    const lance=()=>{d.querySelectorAll('i').forEach(el=>{el.style.animationPlayState='running';});part();};
+    if(direct){requestAnimationFrame(lance);return;}   // rejoué à la main : pas d'attente
     const plancher=new Promise(r=>setTimeout(r,500));
     const pret=document.readyState==='complete'?Promise.resolve():
       new Promise(r=>addEventListener('load',r,{once:true}));
-    Promise.all([Promise.race([pret,new Promise(r=>setTimeout(r,1200))]),plancher]).then(()=>{
-      d.querySelectorAll('i').forEach(el=>{el.style.animationPlayState='running';});
-      part();
-    });
+    Promise.all([Promise.race([pret,new Promise(r=>setTimeout(r,1200))]),plancher]).then(lance);
     d.querySelectorAll('i').forEach(el=>{el.style.animationPlayState='paused';});
   }
   // on n'ouvre pas un rideau au milieu de la page, ni si on n'en veut pas
+  /* le bouton rejoue le dévoilement quand on veut, où qu'on soit dans la page */
+  const bouton=$('#rejoue');
+  if(bouton)bouton.addEventListener('click',()=>{
+    const h=hero.getBoundingClientRect();
+    if(h.bottom<h.height*0.6)                                  // le hero n'est plus à l'écran :
+      scrollTo({top:0,behavior:'auto'});                       // d'un coup : 25 000 px en douceur, non
+    const d=$('#rideauCss'); if(d)d.remove();
+    requestAnimationFrame(()=>rideauCss(RM,true));
+  });
   if(scrollY>40){jette();return;}              // pas de rideau au milieu de la page
   if(RM){jette();rideauCss(true);return;}      // moins de mouvement, mais un dévoilement quand même
 
