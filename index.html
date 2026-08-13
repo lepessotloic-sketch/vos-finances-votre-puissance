@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-vue="essentiel">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -1502,11 +1502,71 @@ footer{background:transparent}
 @media(max-width:560px){.q2{grid-template-columns:1fr}}
 @media(max-width:520px){#q-rec{gap:7px 12px;font-size:.78rem}}
 
+/* ── 25. LA CARTE QUI SE PLIE ─────────────────────────────────
+   Le site entier reste dans la page : en vue « essentiel » il se range,
+   comme une carte routière. Chaque section garde son numéro, son titre,
+   une phrase et un bouton qui la rouvre sur place. On plie, on ne
+   supprime jamais — d'où le pliage par section, et non par page. */
+.plibloc{display:none}
+.plie{font-size:1.02rem;line-height:1.62;color:rgba(var(--ice-rgb),.82);max-width:46ch;margin:0}
+.deplier{display:inline-flex;align-items:center;gap:9px;margin-top:20px;padding:9px 17px;
+  border:1px solid var(--line);border-radius:100px;background:transparent;cursor:pointer;
+  font-family:var(--sans);font-size:.76rem;letter-spacing:.05em;color:rgba(var(--ice-rgb),.7);
+  transition:color .35s var(--e),border-color .35s var(--e),background .35s var(--e)}
+.deplier i{font-style:normal;color:var(--gold-l);transition:transform .4s var(--e)}
+.deplier:hover{color:var(--ice);border-color:rgba(var(--gold-rgb),.42);background:rgba(var(--ice-rgb),.05)}
+.deplier:hover i{transform:translateY(2px)}
+.deplier:focus-visible{outline:2px solid var(--gold-l);outline-offset:3px}
+
+[data-vue="essentiel"] section:not([data-ouvert]) .plibloc{display:block}
+[data-vue="essentiel"] section:not([data-ouvert]) .head .lead{display:none!important}
+
+/* le pliage : tout ce qui n'est ni l'en-tête ni marqué « garde » se range */
+/* Les sections ont des règles écrites avec leur identifiant, qui gagnent
+   contre un sélecteur de classe si spécifique soit-il. Le pliage est un
+   changement de mode : il doit gagner, d'où le drapeau. */
+[data-vue="essentiel"] main>section:not([data-ouvert])>.wrap>*:not(.head):not(.garde){display:none!important}
+[data-vue="essentiel"] main>section:not([data-ouvert])>.wrap{padding-top:clamp(34px,5vh,58px);padding-bottom:clamp(34px,5vh,58px)}
+[data-vue="essentiel"] #arbre:not([data-ouvert]) .tree,
+[data-vue="essentiel"] #arbre:not([data-ouvert]) .tree-end,
+[data-vue="essentiel"] #arbre:not([data-ouvert]) .split .pic{display:none!important}
+
+/* le budget : quatre chiffres et le niveau, rien d'autre */
+[data-vue="essentiel"] #budget:not([data-ouvert]) .bud-out{display:none!important}
+[data-vue="essentiel"] #budget:not([data-ouvert]) .brow,
+[data-vue="essentiel"] #budget:not([data-ouvert]) .bgrp,
+[data-vue="essentiel"] #budget:not([data-ouvert]) .bsum{display:none!important}
+[data-vue="essentiel"] #budget:not([data-ouvert]) .brow.q4{display:flex!important}
+[data-vue="essentiel"] #budget:not([data-ouvert]) .bud-in{grid-template-columns:1fr}
+/* cette note explique la frontière besoins / envies : sans les lignes qu'elle
+   commente, elle parle dans le vide */
+[data-vue="essentiel"] #budget:not([data-ouvert]) .bud-in .rule-note{display:none!important}
+
+/* le lexique : la recherche reste, la liste n'apparaît qu'à la frappe */
+[data-vue="essentiel"] #lexique:not([data-ouvert]) #lexlist{display:none!important}
+[data-vue="essentiel"] #lexique:not([data-ouvert]).cherche #lexlist{display:grid!important}
+
+/* le bouton du bandeau */
+#vue{display:inline-flex;align-items:center;gap:9px;padding:10px 15px;border-radius:100px;
+  border:1px solid var(--line);background:transparent;cursor:pointer;
+  font-family:var(--sans);font-size:.72rem;letter-spacing:.05em;color:rgba(var(--ice-rgb),.78);
+  transition:color .35s var(--e),border-color .35s var(--e),background .35s var(--e)}
+#vue:hover{color:var(--ice);border-color:rgba(var(--gold-rgb),.42);background:rgba(var(--ice-rgb),.06)}
+#vue:focus-visible{outline:2px solid var(--gold-l);outline-offset:3px}
+#vue svg{width:16px;height:16px;flex:0 0 auto;stroke:var(--gold-l);fill:none;
+  stroke-width:1.5;stroke-linejoin:round}
+@media(max-width:660px){#vue span{display:none}#vue{padding:10px 12px}}
+
 /* ── 8. MOUVEMENT RÉDUIT — la version statique reste complète ── */
 @media (prefers-reduced-motion:reduce){
   .uw path{stroke-dashoffset:0;animation:none}
 }
 </style>
+<script>
+/* La vue choisie est posee avant le premier rendu : sans cela, celui qui a
+   demande la version complete verrait la page se replier sous ses yeux. */
+try{var v=localStorage.getItem('vfvp-vue');if(v==='complet')document.documentElement.dataset.vue='complet';}catch(e){}
+</script>
 </head>
 <body>
 
@@ -1519,6 +1579,10 @@ footer{background:transparent}
       <small>Un site réalisé par Impact-NVA</small></span>
   </a>
   <div class="hact">
+    <button id="vue" type="button" data-h aria-pressed="true"
+      title="Passer de la vue essentielle a la vue complete">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6l6-3 6 3 6-3v15l-6 3-6-3-6 3V6z"/><path d="M9 3v15M15 6v15"/></svg>
+      <span>Tout afficher</span></button>
     <button id="burger" aria-label="Ouvrir le menu" aria-expanded="false" data-h>
       <span></span><span></span><span></span></button>
   </div>
@@ -3313,6 +3377,87 @@ const LEX=[
           'écrivez à <a href="mailto:contact@impact-nva.fr?subject=Mon%20bilan%20personnalis%C3%A9">'+
           "contact@impact-nva.fr</a> et nous vous l'envoyons à la main.");
       });
+  });
+})();
+
+/* ═══ LA CARTE QUI SE PLIE ═══
+   Un site de vingt-cinq mille pixels est une carte dépliée : tout y est,
+   mais on ne sait pas où poser les yeux. En vue « essentiel » chaque
+   section se réduit à son titre et à une phrase, et se rouvre d'un clic,
+   sur place. Rien n'est retiré du document : c'est de la présentation,
+   les règles de calcul ne bougent pas. */
+(function(){
+  const PHRASES={
+    definition:"Être riche, ce n'est pas gagner beaucoup : c'est pouvoir tenir longtemps sans travailler.",
+    parcours:"Ce n'est pas le salaire qui décide, c'est l'écart entre ce qui entre et ce qui sort.",
+    arbre:"Votre argent pousse comme un arbre : on plante, on arrose régulièrement, et on ne le déterre pas pour vérifier.",
+    budget:"Quatre chiffres suffisent pour savoir où vous en êtes. Les autres postes gardent une valeur moyenne, à ajuster en dépliant.",
+    reperes:"Les taux et les cours affichés ici sont lus en direct, pas recopiés.",
+    calculateur:"Dans combien d'années vos placements paieront-ils vos courses à votre place&nbsp;?",
+    patrimoine:"Cinq étages, et on ne saute jamais le premier : de l'argent disponible tout de suite en cas de coup dur.",
+    investir:"Choisir les bonnes entreprises, même les professionnels le ratent. On achète donc le marché entier d'un coup, pour presque rien.",
+    crypto:"En crypto, personne ne rembourse. Si vous en détenez, ces dix points sont votre seule assurance.",
+    plateformes:"Avant de déposer un euro quelque part, vérifiez que la plateforme est au registre officiel. C'est gratuit, ça prend deux minutes.",
+    bibliotheque:"Dix livres, chacun résumé en une phrase : de quoi choisir sans se tromper.",
+    lexique:"Tous les mots compliqués du site, expliqués comme à un ami.",
+    erreurs:"Les erreurs les plus coûteuses sont toujours les mêmes. Les connaître suffit souvent à les éviter.",
+    contact:"Laissez votre prénom et votre e-mail : vous recevez votre bilan en PDF, et le livre gratuit."
+  };
+  /* ce qui continue de travailler même plié : là où le visiteur agit */
+  const GARDE={budget:['.bud','.situ'],calculateur:['.calc'],
+    lexique:['.lex-search','#lexlist'],contact:['.etape','.ct'],arbre:['.split']};
+  const QUATRE=['b-sal','b-loyer','b-courses','b-precaution'];
+
+  const racine=document.documentElement;
+  const bouton=$('#vue');
+  if(!bouton)return;
+
+  QUATRE.forEach(id=>{const e=$('#'+id);if(e&&e.closest('.brow'))e.closest('.brow').classList.add('q4');});
+
+  Object.keys(PHRASES).forEach(id=>{
+    const sec=$('#'+id); if(!sec)return;
+    (GARDE[id]||[]).forEach(sel=>{const e=sec.querySelector(sel);if(e)e.classList.add('garde');});
+
+    // l'en-tête : celui du gabarit courant, ou le bloc de texte de la section « arbre »
+    const hote=sec.querySelector('.head')||sec.querySelector('.split>div:last-child');
+    if(!hote)return;
+    const bloc=document.createElement('div');
+    bloc.className='plibloc';
+    bloc.innerHTML='<p class="plie">'+PHRASES[id]+'</p>'+
+      '<button class="deplier" type="button" data-h>Voir le détail <i>↓</i></button>';
+    hote.appendChild(bloc);
+
+    bloc.querySelector('.deplier').addEventListener('click',()=>{
+      sec.setAttribute('data-ouvert','');
+      const r=sec.querySelector('.head')||sec;
+      r.scrollIntoView({block:'start',behavior:'smooth'});
+    });
+  });
+
+  /* la liste du lexique n'apparaît qu'à la frappe, sinon la section plie
+     avec quarante et un termes ouverts sous une phrase qui dit « c'est simple » */
+  const q=$('#lexq');
+  if(q)q.addEventListener('input',()=>{
+    $('#lexique').classList.toggle('cherche',q.value.trim().length>0);
+  });
+
+  function dire(){
+    const plie=racine.dataset.vue==='essentiel';
+    bouton.querySelector('span').textContent=plie?'Tout afficher':'Aller à l\'essentiel';
+    bouton.setAttribute('aria-pressed',plie?'true':'false');
+    bouton.title=plie?'Afficher le site en entier':'Ne garder que l\'essentiel';
+    /* sur telephone le bouton n'affiche que l'icone : sans etiquette, un
+       lecteur d'ecran annoncerait un bouton sans nom */
+    bouton.setAttribute('aria-label',bouton.title);
+  }
+  dire();
+
+  bouton.addEventListener('click',()=>{
+    const plie=racine.dataset.vue==='essentiel';
+    racine.dataset.vue=plie?'complet':'essentiel';
+    if(plie)$$('main>section').forEach(x=>x.removeAttribute('data-ouvert'));
+    try{localStorage.setItem('vfvp-vue',racine.dataset.vue);}catch(e){}
+    dire();
   });
 })();
 
