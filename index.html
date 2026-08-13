@@ -1477,6 +1477,31 @@ footer{background:transparent}
 #rejoue:focus-visible{outline:2px solid var(--gold-l);outline-offset:3px}
 @media(max-width:520px){#rejoue span{display:none}#rejoue{padding:11px 14px}}
 
+/* ── 24. LE FORMULAIRE DE BILAN ───────────────────────────────
+   Le mailto est remplacé par un envoi réel : il faut donc un aperçu de
+   ce qui part, un état d'attente, un succès, un échec — et un piège à
+   robots invisible, qui ne coûte ni service tiers ni gêne au visiteur. */
+.hp{position:absolute!important;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+#q-rec{display:flex;flex-wrap:wrap;align-items:center;gap:9px 16px;margin:0 0 28px;
+  padding:15px 18px;border:1px solid var(--line-2);border-left:2px solid var(--nc,var(--gold));
+  background:var(--fondu);font-size:.82rem;line-height:1.6;color:rgba(var(--ice-rgb),.74)}
+#q-rec b{font-family:var(--mono);font-size:.6rem;letter-spacing:.2em;padding:4px 9px;border-radius:3px;
+  color:#0A0F20;background:var(--nc,var(--gold));font-weight:600}
+#q-rec em{font-style:normal;color:var(--ice)}
+#q-rec.vide{border-left-color:rgba(var(--ice-rgb),.22);display:block}
+#q-rec a{color:var(--gold-l);text-decoration:underline}
+#ko{display:none;border:1px solid rgba(255,107,143,.42);background:rgba(255,107,143,.07);
+  padding:15px 19px;margin-top:16px;font-size:.86rem;line-height:1.65}
+#ok{line-height:1.65}
+#ok b,#ko b{color:var(--ice)}
+#ok a,#ko a{color:var(--gold-l);text-decoration:underline}
+.btn[aria-busy="true"]{opacity:.55;pointer-events:none}
+.q-note{font-size:.72rem;color:rgba(var(--ice-rgb),.55);margin-top:18px;line-height:1.7;max-width:62ch}
+.q-note a{color:var(--gold-l);text-decoration:underline}
+.q2{display:grid;grid-template-columns:1fr 1fr;gap:0 26px}
+@media(max-width:560px){.q2{grid-template-columns:1fr}}
+@media(max-width:520px){#q-rec{gap:7px 12px;font-size:.78rem}}
+
 /* ── 8. MOUVEMENT RÉDUIT — la version statique reste complète ── */
 @media (prefers-reduced-motion:reduce){
   .uw path{stroke-dashoffset:0;animation:none}
@@ -1514,7 +1539,7 @@ footer{background:transparent}
   <a href="#lexique" data-h><em>11</em>Lexique</a>
   <a href="#erreurs" data-h><em>12</em>Pièges</a>
   <a href="#contact" data-h><em>13</em>Contact</a>
-  <a href="#contact" class="mcta" data-h>Recevoir le récapitulatif →</a>
+  <a href="#contact" class="mcta" data-h>Recevoir mon bilan →</a>
 </div>
 
 <main>
@@ -2580,10 +2605,11 @@ footer{background:transparent}
     <div class="head">
       <div>
         <span class="tag rv">13 — Aller plus loin</span>
-        <h2 class="serif rv d1">Recevoir le<br><span class="it">récapitulatif</span>.</h2>
+        <h2 class="serif rv d1">Recevez votre<br><span class="it">bilan personnalisé</span>.</h2>
       </div>
-      <p class="lead rv d2" style="max-width:32ch">Les cinq étages, la liste de sécurité crypto et les critères
-        de plateforme, en un document. Écrivez-nous, on vous l'envoie.</p>
+      <p class="lead rv d2" style="max-width:34ch">Votre niveau, votre réserve conseillée et vos trois prochaines
+        actions, calculés à partir des montants que vous venez de saisir. Un résumé par e-mail, un PDF à conserver,
+        et le livre gratuit.</p>
     </div>
 
     <div class="etape rv d1" id="etape">
@@ -2598,22 +2624,22 @@ footer{background:transparent}
 
     <div class="ct">
       <form id="fm" class="rv" novalidate>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 26px">
-          <div class="fd"><input id="q-nom" type="text" placeholder=" " required><label for="q-nom">Prénom</label><i class="bar"></i></div>
-          <div class="fd"><input id="q-mail" type="email" placeholder=" " required><label for="q-mail">E-mail</label><i class="bar"></i></div>
+        <div id="q-rec" class="vide">—</div>
+        <div class="q2">
+          <div class="fd"><input id="q-nom" type="text" placeholder=" " autocomplete="given-name" required><label for="q-nom">Prénom</label><i class="bar"></i></div>
+          <div class="fd"><input id="q-mail" type="email" placeholder=" " autocomplete="email" required><label for="q-mail">E-mail</label><i class="bar"></i></div>
         </div>
-        <div class="fd up">
-          <select id="q-niv" aria-label="Où vous en êtes">
-            <option>Je démarre de zéro</option>
-            <option>J'ai un fonds d'urgence, pas de placements</option>
-            <option>J'investis déjà, je veux structurer</option>
-            <option>Je détiens des cryptos et je veux les sécuriser</option>
-          </select><label for="q-niv">Où vous en êtes</label><i class="bar"></i></div>
-        <div class="fd"><textarea id="q-msg" placeholder=" " rows="3"></textarea><label for="q-msg">Votre question</label><i class="bar"></i></div>
-        <button type="submit" class="btn mg" data-h>Envoyer <i>→</i></button>
-        <div id="ok">Votre messagerie s'ouvre avec le message pré-rempli. Il ne reste qu'à envoyer.</div>
-        <p class="dim" style="font-size:.72rem;margin-top:16px">Aucune donnée n'est enregistrée par cette page.
-          Le bouton ouvre simplement votre logiciel de courrier.</p>
+        <div class="fd"><textarea id="q-msg" placeholder=" " rows="3"></textarea><label for="q-msg">Une question&nbsp;? (facultatif)</label><i class="bar"></i></div>
+        <div class="hp" aria-hidden="true"><label for="q-web">Laissez ce champ vide</label>
+          <input id="q-web" type="text" tabindex="-1" autocomplete="off"></div>
+        <button type="submit" class="btn mg" id="q-go" data-h>Recevoir mon bilan <i>→</i></button>
+        <div id="ok"></div>
+        <div id="ko"></div>
+        <p class="q-note">Votre e-mail sert uniquement à vous envoyer ce bilan&nbsp;: il n'est ni revendu,
+          ni utilisé pour de la publicité, et vous n'êtes inscrit à aucune liste. Le détail de vos lignes de
+          budget — loyer, courses, loisirs — ne quitte jamais votre navigateur&nbsp;; seuls les totaux et les
+          résultats affichés ci-dessus servent à écrire le document. Pour effacer toute trace de votre passage,
+          écrivez à <a href="mailto:contact@impact-nva.fr">contact@impact-nva.fr</a>.</p>
       </form>
 
       <aside class="info rv d2">
@@ -3192,17 +3218,94 @@ const LEX=[
   });
 })();
 
-/* ═══ FORMULAIRE ═══ */
-$('#fm').addEventListener('submit',e=>{
-  e.preventDefault();
-  const v=id=>($('#'+id).value||'').trim();
-  if(!v('q-nom')||!v('q-mail')){alert('Merci d\'indiquer au moins un prénom et un e-mail.');return;}
-  const b='Prénom : '+v('q-nom')+'\nE-mail : '+v('q-mail')+'\nSituation : '+v('q-niv')+
-          '\n\nQuestion :\n'+v('q-msg')+'\n';
-  location.href='mailto:contact@impact-nva.fr?subject='+
-    encodeURIComponent('Récapitulatif patrimoine — '+v('q-nom'))+'&body='+encodeURIComponent(b);
-  $('#ok').style.display='block';
-});
+/* ═══ FORMULAIRE — LE BILAN PART VRAIMENT ═══
+   Le mailto ouvrait une messagerie et promettait un document que personne
+   n'écrivait. Ici, le site poste les résultats déjà affichés à un flux qui
+   rédige le PDF et envoie l'e-mail. Ce qui ne part pas : les seize lignes du
+   budget. Seuls les totaux et le verdict voyagent. */
+(function(){
+  const f=$('#fm'); if(!f)return;
+  const ENVOI='https://n8n.srv1677224.hstgr.cloud/webhook/bilan-vfvp';
+  const ok=$('#ok'), ko=$('#ko'), go=$('#q-go'), rec=$('#q-rec');
+  let envoye=false;
+  /* un jeton par visite : si le doigt ripe sur le bouton, le flux reconnaît
+     le même envoi et n'écrit pas deux fois */
+  const jeton=(function(){try{return crypto.randomUUID();}
+    catch(e){return 'b-'+Date.now().toString(36)+Math.random().toString(36).slice(2,8);}})();
+
+  /* L'aperçu : la promesse devient visible avant le clic, pas après. Tant que
+     le tableau n'est pas rempli, on le dit — un bilan calculé sur des montants
+     d'exemple ne serait le bilan de personne. */
+  function apercu(){
+    const b=window.bilan&&window.bilan();
+    if(!b||!b.tableau_rempli){
+      rec.className='vide';
+      rec.innerHTML='Votre bilan se calcule sur vos propres montants. '+
+        '<a href="#budget" data-h style="text-decoration:underline">Remplissez le tableau du budget</a>'+
+        '&nbsp;: votre niveau, votre réserve conseillée et vos trois actions apparaissent ici.';
+      return false;
+    }
+    rec.className='';
+    rec.style.setProperty('--nc',PARCOURS.NIV[b.niveau].c);
+    rec.innerHTML='<b>'+b.niveau+'</b><em>'+b.niveau_nom+'</em>'+
+      '<span>Réserve conseillée&nbsp;: <em>'+eur(b.chiffres.reserve_3mois)+'</em></span>'+
+      '<span>Trois actions à votre étape</span>';
+    return true;
+  }
+  /* On repasse par la boucle d'événements avant de lire : ce module est
+     déclaré avant celui qui tient l'état, donc son écouteur est appelé
+     en premier. Sans ce report, l'aperçu afficherait le calcul précédent. */
+  document.addEventListener('niveau',function(){if(!envoye)setTimeout(apercu,0);});
+  apercu();
+
+  const dire=(el,html)=>{el.innerHTML=html;el.style.display='block';};
+
+  f.addEventListener('submit',function(e){
+    e.preventDefault();
+    if(envoye)return;
+    ko.style.display='none';
+    const v=id=>{const el=$('#'+id);return el?(el.value||'').trim():'';};
+    const prenom=v('q-nom'), mail=v('q-mail');
+    if(!prenom||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)){
+      dire(ko,"Il manque votre prénom ou une adresse e-mail valide — c'est tout ce dont nous avons besoin pour vous écrire.");
+      return;
+    }
+    const b=window.bilan&&window.bilan();
+    if(!b||!b.tableau_rempli){
+      dire(ko,'Le tableau du budget est encore vide. <a href="#budget" data-h>Renseignez vos montants</a>, '+
+        "puis revenez&nbsp;: ce bilan n'a de sens qu'avec les vôtres.");
+      return;
+    }
+    envoye=true;
+    go.setAttribute('aria-busy','true');
+    const etiquette=go.innerHTML;
+    go.innerHTML='Envoi en cours…';
+
+    const corps=Object.assign({},b,{prenom:prenom,email:mail,message:v('q-msg'),
+      piege:v('q-web'),envoi_id:jeton,source:'vos-finances.impact-nva.fr',
+      envoye_le:new Date().toISOString()});
+
+    fetch(ENVOI,{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(corps)})
+      .then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r;})
+      .then(function(){
+        f.querySelectorAll('input,textarea,button').forEach(function(x){x.disabled=true;});
+        go.style.display='none';
+        dire(ok,'<b>Votre bilan personnalisé vient de vous être envoyé</b> à '+
+          mail.replace(/&/g,'&amp;').replace(/</g,'&lt;')+'. Il arrive en général en moins '+
+          "d'une minute — pensez à vérifier vos courriers indésirables, et à marquer "+
+          "l'expéditeur comme fiable pour la suite.");
+      })
+      .catch(function(){
+        envoye=false;
+        go.innerHTML=etiquette;
+        go.removeAttribute('aria-busy');
+        dire(ko,"<b>L'envoi n'a pas abouti.</b> Réessayez dans un instant&nbsp;; si cela recommence, "+
+          'écrivez à <a href="mailto:contact@impact-nva.fr?subject=Mon%20bilan%20personnalis%C3%A9">'+
+          "contact@impact-nva.fr</a> et nous vous l'envoyons à la main.");
+      });
+  });
+})();
 
 /* ═══ ADAPTATION TACTILE ═══ */
 /* Sur écran tactile il n'y a pas de souris à passer sur le titre. On écoute au
@@ -3700,7 +3803,18 @@ const PARCOURS=(function(){
     }
     txt.innerHTML=t; pr.innerHTML=p;
 
-    document.dispatchEvent(new CustomEvent('niveau',{detail:{niv:niv,prio:p,pret:rev>0&&dep>0}}));
+    /* Tout ce que le bilan enverra naît ici, à côté du niveau et de la
+       priorité : l'écran, le PDF et l'e-mail lisent la même source. */
+    const ch={revenus:Math.round(rev),depenses:Math.round(dep),
+      besoins:Math.round(d.besoins),envies:Math.round(d.envies),dons:Math.round(d.dons),
+      epargne_mensuelle:Math.round(d.epargne),taux_epargne:+te.toFixed(1),
+      reserve_actuelle:Math.round(d.precaution),mois_avance:ma,
+      reserve_3mois:Math.round(dep*3),reserve_6mois:Math.round(dep*6),
+      credits_mensuels:Math.round(d.credits),
+      taux_endettement:rev>0?+(d.credits/rev*100).toFixed(1):0,
+      reste_a_vivre:Math.round(rev-d.besoins),
+      deja_investi:Math.round(inv),mois_investis:moisInv};
+    document.dispatchEvent(new CustomEvent('niveau',{detail:{niv:niv,prio:p,pret:rev>0&&dep>0,chiffres:ch}}));
     const ordre=['M1','M2','M3','M4'], ici=ordre.indexOf(niv);
     $$('#s-escale span').forEach((s,k)=>{
       s.className = k===ici?'on':(k<ici?'pas':'');
@@ -3747,10 +3861,9 @@ const PARCOURS=(function(){
        {t:"Les erreurs qui coûtent le plus cher",o:"#erreurs",
         p:"À ce stade, l'enjeu n'est plus de courir : c'est de ne pas défaire ce qui est construit."}]
   };
-  /* la liste déroulante du formulaire suit le niveau, si le visiteur a rempli */
-  const VERS={M1:0,M2:1,M3:2,M4:2};
-  let touche=false;
-  function rend(niv,prio,pret){
+  let touche=false, dernier=null;
+  function rend(niv,prio,pret,ch){
+    dernier={niv:niv,prio:prio,pret:pret,ch:ch};
     const n=PARCOURS.NIV[niv];
     bloc.style.setProperty('--nc',n.c);
     pil.textContent=niv; nom.textContent=n.t;
@@ -3760,10 +3873,26 @@ const PARCOURS=(function(){
     src.innerHTML = touche&&pret
       ? "Calculé à partir des montants que vous avez saisis dans le tableau du budget, dans votre navigateur — rien n'est envoyé."
       : 'Ces trois contenus correspondent au parcours affiché par défaut. <a href="#budget" data-h style="text-decoration:underline">Remplissez le tableau du budget</a> avec vos montants&nbsp;: cette étape devient la vôtre.';
-    const sel=$('#q-niv');
-    if(sel&&touche&&pret)sel.selectedIndex=VERS[niv];
   }
-  document.addEventListener('niveau',e=>rend(e.detail.niv,e.detail.prio,e.detail.pret));
+
+  /* Ce que le formulaire enverra. C'est construit ici parce que c'est ici que
+     vivent le niveau, la priorité et les trois étapes — nulle part ailleurs.
+     Le formulaire ne recalcule rien : il recopie. */
+  const sansBalises=h=>{const t=document.createElement('div');t.innerHTML=h||'';
+    return (t.textContent||'').replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim();};
+  window.bilan=function(){
+    if(!dernier)return null;
+    const tab=$('#b-tabs button.on');
+    return {niveau:dernier.niv,
+      niveau_nom:PARCOURS.NIV[dernier.niv].t,
+      priorite:sansBalises(dernier.prio),
+      etapes:CONTENUS[dernier.niv].map(c=>({titre:c.t,texte:c.p,ancre:c.o})),
+      chiffres:dernier.ch||null,
+      modele_budget:tab?(tab.firstChild&&tab.firstChild.nodeValue||'').trim():'',
+      tableau_rempli:!!(touche&&dernier.pret)};
+  };
+
+  document.addEventListener('niveau',e=>rend(e.detail.niv,e.detail.prio,e.detail.pret,e.detail.chiffres));
   const premier=$('#b-sal');
   if(premier)premier.dispatchEvent(new Event('input',{bubbles:true}));   // un premier rendu
   ['b-sal','b-autres','b-loyer','b-credit','b-energie','b-courses','b-transport','b-assur',
