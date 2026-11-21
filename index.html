@@ -794,6 +794,13 @@ footer{padding:clamp(42px,6vh,74px) var(--pad) 24px;background:var(--void-2);bor
   color:rgba(var(--ice-rgb),.32)}
 .fbot b{color:var(--gold);font-weight:400}
 .fbot a{color:inherit;text-decoration:underline}
+.pied-site{display:grid;grid-template-columns:120px minmax(0,1fr);gap:14px;align-items:center;max-width:340px;margin:28px auto 0;text-decoration:none}
+.pied-site-image{display:block;overflow:hidden;border-radius:4px;box-shadow:0 0 0 1px rgba(201,162,75,.28),0 10px 26px -14px rgba(0,0,0,.9)}
+.pied-site-image img{display:block;width:100%;height:auto;aspect-ratio:360/189;object-fit:cover;transition:transform .9s ease,filter .6s ease}
+.pied-site:hover .pied-site-image img{transform:scale(1.06);filter:brightness(1.1)}
+.pied-site-texte{display:grid;gap:2px;min-width:0;text-align:left}
+.pied-site-texte b{font-size:1.1rem;font-weight:600;line-height:1.1;color:var(--gold)}
+.pied-site-texte small{font-size:.8rem;line-height:1.35;opacity:.7}
 #toTop{position:fixed;right:18px;bottom:18px;z-index:6500;width:46px;height:46px;border:1px solid var(--line);
   background:rgba(5,5,6,.8);backdrop-filter:blur(10px);display:grid;place-items:center;opacity:0;
   transform:translateY(16px);pointer-events:none;transition:.5s var(--e)}
@@ -2796,6 +2803,10 @@ try{var v=localStorage.getItem('vfvp-vue');if(v==='complet')document.documentEle
       vérifiez la date avant de vous appuyer dessus.</p>
   </details>
 
+  <a class="pied-site" href="https://impact-nva.fr/" target="_blank" rel="noopener" data-h>
+    <span class="pied-site-image"><img src="images/miniature-impact-nva.jpg" alt="Le site Impact-NVA" width="360" height="189" loading="lazy" decoding="async"></span>
+    <span class="pied-site-texte"><b>Impact-NVA</b><small>Site réalisé par Impact-NVA</small></span>
+  </a>
   <div class="fbot" style="margin-top:26px">
     <span>© <span id="yr">2026</span> Vos finances, votre puissance · un site édité par Impact-NVA · Entrepreneur individuel (micro-entrepreneur, BIC) · SIRET 130&nbsp;110&nbsp;000&nbsp;00010 · TVA non applicable, article 293&nbsp;B du Code général des impôts · <a href="https://impact-nva.fr/mentions-legales.html">Mentions légales</a></span>
     <span>L'ebook complet est vendu par Gumroad, paiement sécurisé · la version gratuite est offerte</span>
